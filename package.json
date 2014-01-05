@@ -1,0 +1,43 @@
+{
+  "name": "uglifyjs-folder",
+  "description": "Run uglifyjs on a folder and minify the result in a single file",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ionutvmi/uglifyjs-folder",
+  "author": {
+    "name": "Mihai Ionut Vilcu",
+    "email": "ionutvmi@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ionutvmi/uglifyjs-folder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ionutvmi/uglifyjs-folder/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/ionutvmi/uglifyjs-folder/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/uglifyjs-folder",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt nodeunit"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.2",
+    "uglify-js": "~2.4.8",
+    "mkdirp": "~0.3.5"
+  },
+  "keywords": [],
+  "preferGlobal": "true",
+  "bin": {
+    "uglifyjs-folder": "lib/uglifyjs-folder.js"
+  }
+}
