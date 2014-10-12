@@ -25,7 +25,7 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
-Oct/12/2014 - Removes the extra files, organizes the code
+Oct/12/2014 - Removes the extra files, organizes the code  
 Jan/05/2014 - Initial release
 
 ## License
