@@ -7,14 +7,14 @@ Install the module with: `npm install uglifyjs-folder -g`
 
 
 ## Documentation
-    usage: uglifyjs-folder path[,...] [options]
+    Usage
+      uglifyjs-folder path [options]
 
     options:
-      -c --no-comments   Will add a comment with the file name
+      -c --comments      Will add a comment with the file name.
       -o --output        Specify a file/folder to write the minified code
       -e --each          Will minify each file in <output>/*.min.js
       -h --help          Print this list and exit.
-
 ## Examples
     $ uglifyjs-folder test-folder
     $ uglifyjs-folder test-folder --comments
