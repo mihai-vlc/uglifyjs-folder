@@ -28,7 +28,7 @@ module.exports = function(dirPath, options) {
       code = uglifyJS.minify(path.join(dirPath, v)).code;
 
       // build the new path
-      if(typeof opt.output != 'string') {
+      if ( ! isValidOutput(opt.output)) {
         opt.output = '_out_';
       }
       newName = path.join(opt.output,
@@ -60,6 +60,9 @@ module.exports = function(dirPath, options) {
 
     if (!opt.each) {
 
+      if ( ! isValidOutput(opt.output)) {
+        opt.output = '_out_.js';
+      }
       fs.writeFile(opt.output, res, function(err) {
         if (err) {
           console.log('Error: ' + err);
@@ -73,4 +76,13 @@ module.exports = function(dirPath, options) {
 
     return res;
   }
+
+
+  function isValidOutput(str) {
+    if (typeof opt.output != 'string' || opt.output.trim() == '') {
+      return false;
+    }
+    return true;
+  }
+
 };
