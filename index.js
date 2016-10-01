@@ -31,8 +31,7 @@ module.exports = function(dirPath, options) {
       if ( ! isValidOutput(opt.output)) {
         opt.output = '_out_';
       }
-      newName = path.join(opt.output,
-        path.dirname(v), path.basename(v, path.extname(v))) + '.min.js';
+      newName = path.join(opt.output, v);
 
       mkdirp.sync(path.dirname(newName));
 
