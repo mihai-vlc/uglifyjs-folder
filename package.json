@@ -34,10 +34,10 @@
     "uglifyjs-folder": "cli.js"
   },
   "dependencies": {
-    "extend": "^2.0.0",
-    "meow": "^1.0.0",
-    "mkdirp": "^0.5.0",
+    "extend": "^3.0.0",
+    "meow": "^3.7.0",
+    "mkdirp": "^0.5.1",
     "readdir": "0.0.13",
-    "uglify-js": "^2.4.15"
+    "uglify-js": "^2.7.3"
   }
 }
