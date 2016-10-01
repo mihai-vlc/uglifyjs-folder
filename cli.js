@@ -12,7 +12,7 @@ var cli = meow({
     'options:',
     '  -c --comments      Will add a comment with the file name.',
     '  -o --output        Specify a file/folder to write the minified code',
-    '  -e --each          Will minify each file in <output>/*.min.js',
+    '  -e --each          Will minify each file independently',
     '  -h --help          Print this list and exit.'
   ].join('\n')
 });
