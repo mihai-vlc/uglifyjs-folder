@@ -7,81 +7,76 @@ var extend = require('extend');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 
-var _default = {
+var defaultOptions = {
   comments: true,
   output: '',
-  each: false
+  each: false,
+  extension: '.min.js'
 };
 
-module.exports = function(dirPath, options) {
-  var res = '';
-  var opt = extend({}, _default, options);
+module.exports = function (dirPath, options) {
+  options = extend({}, defaultOptions, options);
 
   // grab and minify all the js files
   var files = readDir.readSync(dirPath, ['**.js']);
 
-  files.forEach(function(v, i) {
-    var code, newName;
+  if (options.each) {
+    // minify each file individually
+    files.forEach(function (fileName) {
+      options.output = isEmpty(options.output) ? '_out_' : options.output;
+      var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
 
-    // minify each file in the new folder
-    if (opt.each) {
-      code = uglifyJS.minify(path.join(dirPath, v)).code;
-
-      // build the new path
-      if ( ! isValidOutput(opt.output)) {
-        opt.output = '_out_';
-      }
-      newName = path.join(opt.output, path.dirname(v), path.basename(v, path.extname(v))) + opt.extension;
-
-      mkdirp.sync(path.dirname(newName));
-
-      fs.writeFile(newName, code, function(err) {
-        if (err) {
-          console.log('Error: ' + err);
-          return;
-        }
-        console.log('File ' + newName + ' written successfully !');
-      });
-
-    } else {
-      // concatenate all the files into one
-      if (opt.comments) {
-        res += '/**** ' + v + ' ****/\n';
-      }
-
-      res += uglifyJS.minify(path.join(dirPath, v)).code + '\n';
-    }
-
-  });
-
-  // return or write the content in the output file
-  if (opt.output) {
-
-    if (!opt.each) {
-
-      if ( ! isValidOutput(opt.output)) {
-        opt.output = '_out_.js';
-      }
-      fs.writeFile(opt.output, res, function(err) {
-        if (err) {
-          console.log('Error: ' + err);
-          return;
-        }
-        console.log('File ' + opt.output + ' written successfully !');
-      });
-    }
+      var code = uglifyJS.minify(path.join(dirPath, fileName)).code;
+      writeFile(newName, code);
+    });
 
   } else {
 
-    return res;
-  }
+    var result = '';
+    // concatenate all the files into one
+    files.forEach(function (fileName) {
+      if (options.comments) {
+        result += '/**** ' + fileName + ' ****/\n';
+      }
 
+      result += uglifyJS.minify(path.join(dirPath, fileName)).code + '\n';
+    });
 
-  function isValidOutput(str) {
-    if (typeof opt.output != 'string' || opt.output.trim() == '') {
-      return false;
+    if (isEmpty(options.output)) {
+      return result;
+    } else {
+      writeFile(options.output, result);
     }
-    return true;
+
   }
 
 };
+
+/**
+ * Checks if the provided parameter is not an empty string.
+ */
+function isEmpty(str) {
+  if (typeof str != 'string' || str.trim() == '') {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Writes the code at the specified path.
+ */
+function writeFile(filePath, code) {
+
+  mkdirp(path.dirname(filePath), function () {
+
+    fs.writeFile(filePath, code, function (err) {
+      if (err) {
+        console.log('Error: ' + err);
+        return;
+      }
+      console.log('File ' + filePath + ' written successfully !');
+    });
+  });
+
+}
+

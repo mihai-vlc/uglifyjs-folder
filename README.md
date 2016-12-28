@@ -1,5 +1,7 @@
 # uglifyjs-folder
 
+[![Build Status](https://travis-ci.org/ionutvmi/uglifyjs-folder.svg?branch=master)](https://travis-ci.org/ionutvmi/uglifyjs-folder)
+
 Command to run uglifyjs on a folder and minify the result in a single file or a new folder.
 
 ## Getting Started
