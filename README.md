@@ -29,6 +29,8 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 28/Dec/2016 - Added support for sub folder output files. 
+    Example: `uglifyjs-folder test-folder -o newFolder/nested/all.min.js`
 - 01/Oct/2016 - Added the --extension flag
 - 12/Oct/2014 - Removes the extra files, organizes the code
 - 05/Jan/2014 - Initial release
