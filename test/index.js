@@ -16,6 +16,9 @@ var requireStub = {
   },
   'uglify-js': {
     minify: function() {}
+  },
+  'uglify-js-harmony': {
+    minify: function() {}
   }
 };
 
@@ -177,3 +180,38 @@ test('uses custom extension', t => {
   t.deepEqual(path.relative(requireStub.fs.writeFile.args[1][0], '_out_/folder2-nested/file2.test.txx'), '');
 });
 
+test('uses the standard uglifyjs when the es6 parameter is not present', t => {
+  var uglifyJS = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+    code: ''
+  });
+
+  var uglifyJSHarmony = sandbox.stub(requireStub['uglify-js-harmony'], 'minify').returns({
+    code: ''
+  });
+
+  var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
+    output: 'subfolder/scripts.min.js'
+  });
+
+  t.deepEqual(uglifyJS.callCount, 2);
+  t.deepEqual(uglifyJSHarmony.callCount, 0);
+});
+
+test('uses uglifyjs-harmony when the es6 parameter is true', t => {
+  var uglifyJS = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+    code: ''
+  });
+
+  var uglifyJSHarmony = sandbox.stub(requireStub['uglify-js-harmony'], 'minify').returns({
+    code: ''
+  });
+
+  var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
+    output: 'subfolder/scripts.min.js',
+    es6: true
+  });
+
+  t.deepEqual(uglifyJS.callCount, 0);
+  t.deepEqual(uglifyJSHarmony.callCount, 2);
+
+});

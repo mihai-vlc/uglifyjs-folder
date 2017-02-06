@@ -1,6 +1,6 @@
 'use strict';
 
-var uglifyJS = require('uglify-js');
+var uglifyJS;
 var readDir = require('readdir');
 var path = require('path');
 var extend = require('extend');
@@ -11,11 +11,18 @@ var defaultOptions = {
   comments: true,
   output: '',
   each: false,
-  extension: '.min.js'
+  extension: '.min.js',
+  es6: false
 };
 
 module.exports = function (dirPath, options) {
   options = extend({}, defaultOptions, options);
+
+  if (options.es6) {
+    uglifyJS = require('uglify-js-harmony');
+  } else {
+    uglifyJS = require('uglify-js');
+  }
 
   // grab and minify all the js files
   var files = readDir.readSync(dirPath, ['**.js']);
