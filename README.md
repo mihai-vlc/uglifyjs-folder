@@ -31,6 +31,7 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 06/Feb/2017 - Added support for the --harmony flag. 
 - 28/Dec/2016 - Added support for sub folder output files. 
     Example: `uglifyjs-folder test-folder -o newFolder/nested/all.min.js`
 - 01/Oct/2016 - Added the --extension flag
