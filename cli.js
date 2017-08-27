@@ -15,21 +15,24 @@ var cli = meow({
     '  -e --each          Minify each file independently',
     '  -x --extension     Minified file extension (default: .min.js)',
     '  -y --harmony       Uses uglify-js-harmony as a minifier',
+    '  -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js',
+    '     --pseparator    Specifies the separator for the pattern input. Default: ,',
     '  -h --help          Print this list and exit.'
   ].join('\n')
 });
 
 
-var res = uglifyFolder(cli.input[0], {
+var result = uglifyFolder(cli.input[0], {
   comments: cli.flags.comments || cli.flags.c || false,
   output: cli.flags.output || cli.flags.o,
   each: cli.flags.each || cli.flags.e || false,
   es6: cli.flags.harmony || cli.flags.y || false,
-  extension: cli.flags.extension || cli.flags.x || ".min.js"
+  extension: cli.flags.extension || cli.flags.x || ".min.js",
+  patterns: (cli.flags.pattern || cli.flags.p || "**/*.js").split(cli.flags.pseparator || ',')
 });
 
-if(res) {
-  console.log(res);
+if(result) {
+  console.log(result);
 }
 
 

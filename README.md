@@ -18,11 +18,14 @@ Install the module with: `npm install uglifyjs-folder -g`
       -e --each          Minify each file independently
       -x --extension     Minified file extension (default: .min.js)
       -y --harmony       Uses uglify-js-harmony as a minifier
+      -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js
+         --pseparator    Specifies the separator for the pattern input. Default: ,
       -h --help          Print this list and exit.
 ## Examples
     $ uglifyjs-folder test-folder
     $ uglifyjs-folder test-folder --comments
     $ uglifyjs-folder test-folder -o all.min.js
+    $ uglifyjs-folder test-folder --output all.min.js --pattern "**/*.js,!**/*min.js" # ignore minified files 
     $ uglifyjs-folder test-folder -eo newFolder
     $ uglifyjs-folder test-folder-es6 -yo newFolder
     $ uglifyjs-folder test-folder -e -x .js -o test-folder # careful: overwrite all files in test-folder

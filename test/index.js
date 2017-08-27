@@ -215,3 +215,30 @@ test('uses uglifyjs-harmony when the es6 parameter is true', t => {
   t.deepEqual(uglifyJSHarmony.callCount, 2);
 
 });
+
+
+test('uses the pattern parameter', t => {
+  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+    code: ''
+  });
+
+  var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
+    patterns: ['file*.js']
+  });
+
+  t.true(result.indexOf('/**** file1.js ****/') != -1);
+  t.true(result.indexOf('/**** ignore1.js ****/') == -1);
+});
+
+test('accepts negative pattern pattern', t => {
+  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+    code: ''
+  });
+
+  var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
+    patterns: ['**/*.js', '!ignore*.js']
+  });
+
+  t.true(result.indexOf('/**** file1.js ****/') != -1);
+  t.true(result.indexOf('/**** ignore1.js ****/') == -1);
+});

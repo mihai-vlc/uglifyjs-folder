@@ -1,7 +1,7 @@
 'use strict';
 
 var uglifyJS;
-var readDir = require('readdir');
+var globby = require("globby")
 var path = require('path');
 var extend = require('extend');
 var fs = require('fs');
@@ -12,7 +12,8 @@ var defaultOptions = {
   output: '',
   each: false,
   extension: '.min.js',
-  es6: false
+  es6: false,
+  patterns: ['**/*.js']
 };
 
 module.exports = function (dirPath, options) {
@@ -25,7 +26,9 @@ module.exports = function (dirPath, options) {
   }
 
   // grab and minify all the js files
-  var files = readDir.readSync(dirPath, ['**.js']);
+  var files =  globby.sync(options.patterns, {
+    cwd: dirPath
+  });
 
   if (options.each) {
     // minify each file individually
