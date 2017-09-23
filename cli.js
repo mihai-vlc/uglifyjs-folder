@@ -17,10 +17,10 @@ var cli = meow({
     '  -y --harmony       Uses uglify-js-harmony as a minifier',
     '  -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js',
     '     --pseparator    Specifies the separator for the pattern input. Default: ,',
+    '     --version       Prints the current version from package.json',
     '  -h --help          Print this list and exit.'
   ].join('\n')
 });
-
 
 var result = uglifyFolder(cli.input[0], {
   comments: cli.flags.comments || cli.flags.c || false,
@@ -31,7 +31,7 @@ var result = uglifyFolder(cli.input[0], {
   patterns: (cli.flags.pattern || cli.flags.p || "**/*.js").split(cli.flags.pseparator || ',')
 });
 
-if(result) {
+if (result) {
   console.log(result);
 }
 

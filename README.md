@@ -20,6 +20,7 @@ Install the module with: `npm install uglifyjs-folder -g`
       -y --harmony       Uses uglify-js-harmony as a minifier
       -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js
          --pseparator    Specifies the separator for the pattern input. Default: ,
+         --version       Prints the current version from package.json
       -h --help          Print this list and exit.
 ## Examples
     $ uglifyjs-folder test-folder
