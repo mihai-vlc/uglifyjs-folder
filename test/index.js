@@ -35,7 +35,6 @@ test.afterEach(() => {
 
 test('exports a functions', t => {
   t.is(typeof uglifyJsFolder, 'function');
-
 });
 
 test('calls minify for all the files', t => {
@@ -215,7 +214,6 @@ test('uses uglify-es when the es6 parameter is true', t => {
   t.deepEqual(uglifyES6.callCount, 2);
 
 });
-
 
 test('uses the pattern parameter', t => {
   sandbox.stub(requireStub['uglify-js'], 'minify').returns({

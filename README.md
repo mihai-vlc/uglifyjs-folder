@@ -35,6 +35,7 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 11/Nov/2017 - Upgraded to uglify-js@3 and uglify-es@3 
 - 27/Aug/2017 - Added support for the --pattern and --pseparator flags. 
 - 06/Feb/2017 - Added support for the --harmony flag. 
 - 28/Dec/2016 - Added support for sub folder output files. 

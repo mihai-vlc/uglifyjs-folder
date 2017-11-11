@@ -35,9 +35,15 @@ module.exports = function (dirPath, options) {
     files.forEach(function (fileName) {
       options.output = isEmpty(options.output) ? '_out_' : options.output;
       var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
+      var originalCode = readFile(path.join(dirPath, fileName));
+      var minifyResult = uglifyJS.minify(originalCode);
 
-      var code = uglifyJS.minify(path.join(dirPath, fileName)).code;
-      writeFile(newName, code);
+      if (minifyResult.error) {
+        console.log(minifyResult.error);
+        throw minifyResult.error;
+      }
+
+      writeFile(newName, minifyResult.code);
     });
 
   } else {
@@ -48,8 +54,14 @@ module.exports = function (dirPath, options) {
       if (options.comments) {
         result += '/**** ' + fileName + ' ****/\n';
       }
+      var originalCode = readFile(path.join(dirPath, fileName));
+      var minifyResult = uglifyJS.minify(originalCode);
 
-      result += uglifyJS.minify(path.join(dirPath, fileName)).code + '\n';
+      if (minifyResult.error) {
+        console.log(minifyResult.error);
+        throw minifyResult.error;
+      }
+      result += minifyResult.code + '\n';
     });
 
     if (isEmpty(options.output)) {
@@ -70,6 +82,15 @@ function isEmpty(str) {
     return true;
   }
   return false;
+}
+
+function readFile(path) {
+  try {
+    return fs.readFileSync(path, 'utf-8');
+  } catch (e) {
+    console.error("UGLIFYJS FOLDER ERROR: ", path, "was not found !");
+    return '';
+  }
 }
 
 /**
