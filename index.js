@@ -20,7 +20,7 @@ module.exports = function (dirPath, options) {
   options = extend({}, defaultOptions, options);
 
   if (options.es6) {
-    uglifyJS = require('uglify-js-harmony');
+    uglifyJS = require('uglify-es');
   } else {
     uglifyJS = require('uglify-js');
   }

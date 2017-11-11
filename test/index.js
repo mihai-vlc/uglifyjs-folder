@@ -17,7 +17,7 @@ var requireStub = {
   'uglify-js': {
     minify: function() {}
   },
-  'uglify-js-harmony': {
+  'uglify-es': {
     minify: function() {}
   }
 };
@@ -185,7 +185,7 @@ test('uses the standard uglifyjs when the es6 parameter is not present', t => {
     code: ''
   });
 
-  var uglifyJSHarmony = sandbox.stub(requireStub['uglify-js-harmony'], 'minify').returns({
+  var uglifyES6 = sandbox.stub(requireStub['uglify-es'], 'minify').returns({
     code: ''
   });
 
@@ -194,15 +194,15 @@ test('uses the standard uglifyjs when the es6 parameter is not present', t => {
   });
 
   t.deepEqual(uglifyJS.callCount, 2);
-  t.deepEqual(uglifyJSHarmony.callCount, 0);
+  t.deepEqual(uglifyES6.callCount, 0);
 });
 
-test('uses uglifyjs-harmony when the es6 parameter is true', t => {
+test('uses uglify-es when the es6 parameter is true', t => {
   var uglifyJS = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
     code: ''
   });
 
-  var uglifyJSHarmony = sandbox.stub(requireStub['uglify-js-harmony'], 'minify').returns({
+  var uglifyES6 = sandbox.stub(requireStub['uglify-es'], 'minify').returns({
     code: ''
   });
 
@@ -212,7 +212,7 @@ test('uses uglifyjs-harmony when the es6 parameter is true', t => {
   });
 
   t.deepEqual(uglifyJS.callCount, 0);
-  t.deepEqual(uglifyJSHarmony.callCount, 2);
+  t.deepEqual(uglifyES6.callCount, 2);
 
 });
 
