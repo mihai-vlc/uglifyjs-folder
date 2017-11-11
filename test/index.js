@@ -8,6 +8,10 @@ var customStubs = {
 };
 
 var requireStub = {
+  './test-config.json': {
+    "keep_fnames": true,
+    '@noCallThru': true
+  },
   fs: {
     writeFile: function() {}
   },
@@ -240,3 +244,29 @@ test('accepts negative pattern pattern', t => {
   t.true(result.indexOf('/**** file1.js ****/') != -1);
   t.true(result.indexOf('/**** ignore1.js ****/') == -1);
 });
+
+test('has an empty minify configuration if no configguration file is specified', t => {
+  var minifyStub = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+    code: ''
+  });
+
+  var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {});
+
+  t.deepEqual(minifyStub.callCount, 2);
+  t.deepEqual(minifyStub.firstCall.args[1], {});
+});
+
+
+test('uses the specified config file', t => {
+  var minifyStub = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+    code: ''
+  });
+
+  var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
+    configFile: './test-config.json'
+  });
+
+  t.deepEqual(minifyStub.callCount, 2);
+  t.deepEqual(minifyStub.firstCall.args[1], requireStub['./test-config.json']);
+});
+

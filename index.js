@@ -13,7 +13,8 @@ var defaultOptions = {
   each: false,
   extension: '.min.js',
   es6: false,
-  patterns: ['**/*.js']
+  patterns: ['**/*.js'],
+  configFile: null
 };
 
 module.exports = function (dirPath, options) {
@@ -24,6 +25,8 @@ module.exports = function (dirPath, options) {
   } else {
     uglifyJS = require('uglify-js');
   }
+
+  var uglifyConfiguration = options.configFile ? require(options.configFile) : {};
 
   // grab and minify all the js files
   var files =  globby.sync(options.patterns, {
@@ -36,7 +39,7 @@ module.exports = function (dirPath, options) {
       options.output = isEmpty(options.output) ? '_out_' : options.output;
       var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
       var originalCode = readFile(path.join(dirPath, fileName));
-      var minifyResult = uglifyJS.minify(originalCode);
+      var minifyResult = uglifyJS.minify(originalCode, uglifyConfiguration);
 
       if (minifyResult.error) {
         console.log(minifyResult.error);
@@ -55,7 +58,7 @@ module.exports = function (dirPath, options) {
         result += '/**** ' + fileName + ' ****/\n';
       }
       var originalCode = readFile(path.join(dirPath, fileName));
-      var minifyResult = uglifyJS.minify(originalCode);
+      var minifyResult = uglifyJS.minify(originalCode, uglifyConfiguration);
 
       if (minifyResult.error) {
         console.log(minifyResult.error);

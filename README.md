@@ -21,6 +21,7 @@ Install the module with: `npm install uglifyjs-folder -g`
       -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js
          --pseparator    Specifies the separator for the pattern input. Default: ,
          --version       Prints the current version from package.json
+         --config-file   Specifies a json configuration file for the uglify-js/uglify-es module'
       -h --help          Print this list and exit.
 ## Examples
     $ uglifyjs-folder test-folder
@@ -30,11 +31,17 @@ Install the module with: `npm install uglifyjs-folder -g`
     $ uglifyjs-folder test-folder -eo newFolder
     $ uglifyjs-folder test-folder-es6 -yo newFolder
     $ uglifyjs-folder test-folder -e -x .js -o test-folder # careful: overwrite all files in test-folder
+    $ uglifyjs-folder test-folder --config-file "./uglify.json"
+    where uglify.json contains
+    {
+      "keep_fnames": true
+    }
 
 ## Contributing
 Pull requests are appreciated.
 
 ## Release History
+- 11/Nov/2017 - Added support for the --config-file option
 - 11/Nov/2017 - Upgraded to uglify-js@3 and uglify-es@3 
 - 27/Aug/2017 - Added support for the --pattern and --pseparator flags. 
 - 06/Feb/2017 - Added support for the --harmony flag. 
