@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import path from 'path';
 
 var customStubs = {
-  mkdirpStub: function() {}
+  mkdirpStub: function () { }
 };
 
 var requireStub = {
@@ -13,16 +13,16 @@ var requireStub = {
     '@noCallThru': true
   },
   fs: {
-    writeFile: function() {}
+    writeFile: function () { }
   },
-  mkdirp: function() {
+  mkdirp: function () {
     return customStubs.mkdirpStub.apply(this, arguments);
   },
   'uglify-js': {
-    minify: function() {}
+    minify: function () { }
   },
   'uglify-es': {
-    minify: function() {}
+    minify: function () { }
   }
 };
 
@@ -30,11 +30,11 @@ var uglifyJsFolder = proxyquire('../index', requireStub);
 var sandbox;
 
 test.beforeEach(() => {
-   sandbox = sinon.sandbox.create();
+  sandbox = sinon.sandbox.create();
 });
 
 test.afterEach(() => {
-   sandbox.restore();
+  sandbox.restore();
 });
 
 test('exports a functions', t => {
@@ -261,6 +261,10 @@ test('uses the specified config file', t => {
   var minifyStub = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
     code: ''
   });
+
+  const sPath = sinon.stub(path, 'resolve')
+  sPath.withArgs('./test-config.json').returns('./test-config.json');
+  sPath.callThrough();
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
     configFile: './test-config.json'

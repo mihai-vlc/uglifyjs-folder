@@ -26,10 +26,10 @@ module.exports = function (dirPath, options) {
     uglifyJS = require('uglify-js');
   }
 
-  var uglifyConfiguration = options.configFile ? require(options.configFile) : {};
+  var uglifyConfiguration = options.configFile ? require(path.resolve(options.configFile)) : {};
 
   // grab and minify all the js files
-  var files =  globby.sync(options.patterns, {
+  var files = globby.sync(options.patterns, {
     cwd: dirPath
   });
 
