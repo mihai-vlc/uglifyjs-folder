@@ -48,7 +48,7 @@ test('calls minify for all the files', t => {
 
   uglifyJsFolder(__dirname + '/fixtures/folder1');
 
-  t.deepEqual(requireStub['uglify-js'].minify.callCount, 2);
+  t.deepEqual(requireStub['uglify-js'].minify.callCount, 1);
 });
 
 test('calls minify for all nested files', t => {
@@ -58,24 +58,22 @@ test('calls minify for all nested files', t => {
 
   uglifyJsFolder(__dirname + '/fixtures/folder2');
 
-  t.deepEqual(requireStub['uglify-js'].minify.callCount, 2);
+  t.deepEqual(requireStub['uglify-js'].minify.callCount, 1);
 });
 
-test('comments are present when minifying in a single file', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
-    code: ''
-  });
+test('comments are present by default', t => {
+  delete requireStub['uglify-js'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder1');
 
   t.true(result.indexOf('/**** file1.js ****/') > -1);
   t.true(result.indexOf('/**** file2.js ****/') > -1);
+
+  requireStub['uglify-js'].minify = function () {};
 });
 
 test('skip comments if disabled', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
-    code: ''
-  });
+  delete requireStub['uglify-js'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
     comments: false
@@ -83,6 +81,8 @@ test('skip comments if disabled', t => {
 
   t.true(result.indexOf('/**** file1.js ****/') == -1);
   t.true(result.indexOf('/**** file2.js ****/') == -1);
+
+  requireStub['uglify-js'].minify = function () {};
 });
 
 test('write file if the output parameter is present', t => {
@@ -196,7 +196,7 @@ test('uses the standard uglifyjs when the es6 parameter is not present', t => {
     output: 'subfolder/scripts.min.js'
   });
 
-  t.deepEqual(uglifyJS.callCount, 2);
+  t.deepEqual(uglifyJS.callCount, 1);
   t.deepEqual(uglifyES6.callCount, 0);
 });
 
@@ -215,14 +215,12 @@ test('uses uglify-es when the es6 parameter is true', t => {
   });
 
   t.deepEqual(uglifyJS.callCount, 0);
-  t.deepEqual(uglifyES6.callCount, 2);
+  t.deepEqual(uglifyES6.callCount, 1);
 
 });
 
 test('uses the pattern parameter', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
-    code: ''
-  });
+  delete requireStub['uglify-js'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
     patterns: ['file*.js']
@@ -230,12 +228,12 @@ test('uses the pattern parameter', t => {
 
   t.true(result.indexOf('/**** file1.js ****/') != -1);
   t.true(result.indexOf('/**** ignore1.js ****/') == -1);
+
+  requireStub['uglify-js'].minify = function () {};
 });
 
 test('accepts negative pattern pattern', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
-    code: ''
-  });
+  delete requireStub['uglify-js'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
     patterns: ['**/*.js', '!ignore*.js']
@@ -243,17 +241,19 @@ test('accepts negative pattern pattern', t => {
 
   t.true(result.indexOf('/**** file1.js ****/') != -1);
   t.true(result.indexOf('/**** ignore1.js ****/') == -1);
+
+  requireStub['uglify-js'].minify = function () {};
 });
 
-test('has an empty minify configuration if no configguration file is specified', t => {
+test('has a default minify configuration if no configuration file is specified', t => {
   var minifyStub = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
     code: ''
   });
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {});
 
-  t.deepEqual(minifyStub.callCount, 2);
-  t.deepEqual(minifyStub.firstCall.args[1], {});
+  t.deepEqual(minifyStub.callCount, 1);
+  t.truthy(minifyStub.firstCall.args[1]);
 });
 
 
@@ -262,7 +262,7 @@ test('uses the specified config file', t => {
     code: ''
   });
 
-  const sPath = sinon.stub(path, 'resolve')
+  var sPath = sinon.stub(path, 'resolve')
   sPath.withArgs('./test-config.json').returns('./test-config.json');
   sPath.callThrough();
 
@@ -270,7 +270,7 @@ test('uses the specified config file', t => {
     configFile: './test-config.json'
   });
 
-  t.deepEqual(minifyStub.callCount, 2);
-  t.deepEqual(minifyStub.firstCall.args[1], requireStub['./test-config.json']);
+  t.deepEqual(minifyStub.callCount, 1);
+  t.deepEqual(minifyStub.firstCall.args[1].keep_fnames, requireStub['./test-config.json'].keep_fnames);
 });
 

@@ -3,7 +3,7 @@ function test(data, name) {
     return data + 123;
   }
 
-  return data + name + calculate() + calculate();
+  return data + name + calculate(data) + calculate(name);
 }
-
-test();
+console.log('folder3/file1.js');
+console.log(test(1, 3));

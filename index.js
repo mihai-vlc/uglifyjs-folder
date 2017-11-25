@@ -17,6 +17,7 @@ var defaultOptions = {
   configFile: null
 };
 
+
 module.exports = function (dirPath, options) {
   options = extend({}, defaultOptions, options);
 
@@ -38,8 +39,9 @@ module.exports = function (dirPath, options) {
     files.forEach(function (fileName) {
       options.output = isEmpty(options.output) ? '_out_' : options.output;
       var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
-      var originalCode = readFile(path.join(dirPath, fileName));
-      var minifyResult = uglifyJS.minify(originalCode, uglifyConfiguration);
+      var originalCode = {};
+      originalCode[fileName] = readFile(path.join(dirPath, fileName));
+      var minifyResult = uglifyJS.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
 
       if (minifyResult.error) {
         console.log(minifyResult.error);
@@ -47,35 +49,75 @@ module.exports = function (dirPath, options) {
       }
 
       writeFile(newName, minifyResult.code);
+
+      if (minifyResult.map) {
+        writeFile(newName + '.map', minifyResult.map);
+      }
     });
 
   } else {
 
-    var result = '';
     // concatenate all the files into one
-    files.forEach(function (fileName) {
-      if (options.comments) {
-        result += '/**** ' + fileName + ' ****/\n';
-      }
-      var originalCode = readFile(path.join(dirPath, fileName));
-      var minifyResult = uglifyJS.minify(originalCode, uglifyConfiguration);
+    var originalCode = {};
 
-      if (minifyResult.error) {
-        console.log(minifyResult.error);
-        throw minifyResult.error;
+    files.forEach(function (fileName) {
+      var source = readFile(path.join(dirPath, fileName));
+
+      if (options.comments) {
+        source = '/**** ' + fileName + ' ****/\n' + source;
       }
-      result += minifyResult.code + '\n';
+      originalCode[fileName] = source;
     });
 
+    var uglifyOptions = getUglifyOptions(options.output, uglifyConfiguration);
+
+    if (options.comments) {
+      uglifyOptions.output = uglifyOptions.output || {};
+      uglifyOptions.output.comments = uglifyOptions.output.comments || '/\\*{2}/';
+    }
+
+    var minifyResult = uglifyJS.minify(originalCode, uglifyOptions);
+
+    if (minifyResult.error) {
+      console.log(minifyResult.error);
+      throw minifyResult.error;
+    }
+
     if (isEmpty(options.output)) {
-      return result;
+      return minifyResult.code;
     } else {
-      writeFile(options.output, result);
+      writeFile(options.output, minifyResult.code);
+
+      if (minifyResult.map) {
+        writeFile(options.output + '.map', minifyResult.map);
+      }
     }
 
   }
 
 };
+
+/**
+ * Processes the uglifyjs options
+ * @param  {String} fileName
+ * @param  {Object} uglifyConfiguration
+ * @return {Object}
+ */
+function getUglifyOptions (fileName, uglifyConfiguration) {
+  fileName = path.basename(fileName);
+  var uglifyOptions = JSON.parse(JSON.stringify(uglifyConfiguration));
+
+  if (uglifyOptions.sourceMap) {
+    if (uglifyOptions.sourceMap.filename) {
+      uglifyOptions.sourceMap.filename = uglifyOptions.sourceMap.filename.replace('{file}', fileName);
+    }
+    if (uglifyOptions.sourceMap.url) {
+      uglifyOptions.sourceMap.url = uglifyOptions.sourceMap.url.replace('{file}', fileName);
+    }
+  }
+
+  return uglifyOptions;
+}
 
 /**
  * Checks if the provided parameter is not an empty string.

@@ -41,6 +41,16 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 25/Nov/2017 - Added support for sourcemaps via the uglifyjs config file   
+Exmaple configuration:
+```
+{
+  "sourceMap": {
+    "root": "../src",
+    "url": "{file}.map"
+  }
+}
+```
 - 11/Nov/2017 - Added support for the --config-file option
 - 11/Nov/2017 - Upgraded to uglify-js@3 and uglify-es@3 
 - 27/Aug/2017 - Added support for the --pattern and --pseparator flags. 
