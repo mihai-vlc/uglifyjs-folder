@@ -1,7 +1,7 @@
 {
   "name": "uglifyjs-folder",
   "description": "Run uglifyjs on a folder and minify the result in a single file",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "homepage": "https://github.com/ionutvmi/uglifyjs-folder",
   "author": {
     "name": "Mihai Ionut Vilcu",
