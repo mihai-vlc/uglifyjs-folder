@@ -12,7 +12,7 @@ var requireStub = {
     "keep_fnames": true,
     '@noCallThru': true
   },
-  fs: {
+  'graceful-fs': {
     writeFile: function () { }
   },
   mkdirp: function () {
@@ -91,7 +91,7 @@ test('write file if the output parameter is present', t => {
   });
 
   sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
-  sandbox.stub(requireStub.fs, 'writeFile');
+  sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
     output: 'subfolder/scripts.min.js'
@@ -99,7 +99,7 @@ test('write file if the output parameter is present', t => {
 
   t.true(customStubs.mkdirpStub.calledOnce);
   t.true(customStubs.mkdirpStub.calledWith('subfolder'));
-  t.true(requireStub.fs.writeFile.calledWith('subfolder/scripts.min.js'));
+  t.true(requireStub['graceful-fs'].writeFile.calledWith('subfolder/scripts.min.js'));
 });
 
 test('write files in the specified output folder', t => {
@@ -108,7 +108,7 @@ test('write files in the specified output folder', t => {
   });
 
   sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
-  sandbox.stub(requireStub.fs, 'writeFile');
+  sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder1';
   var outputPath = 'folder/dist';
@@ -119,8 +119,8 @@ test('write files in the specified output folder', t => {
   });
 
   t.deepEqual(customStubs.mkdirpStub.callCount, 2);
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[0][0], outputPath + '/file1.min.js'), '');
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[1][0], outputPath + '/file2.min.js'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[0][0], outputPath + '/file1.min.js'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[1][0], outputPath + '/file2.min.js'), '');
 });
 
 test('maintain subfolder structure', t => {
@@ -129,7 +129,7 @@ test('maintain subfolder structure', t => {
   });
 
   sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
-  sandbox.stub(requireStub.fs, 'writeFile');
+  sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder2';
   var outputPath = 'folder/dist';
@@ -140,8 +140,8 @@ test('maintain subfolder structure', t => {
   });
 
   t.deepEqual(customStubs.mkdirpStub.callCount, 2);
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[0][0], outputPath + '/file1.min.js'), '');
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[1][0], outputPath + '/folder2-nested/file2.min.js'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[0][0], outputPath + '/file1.min.js'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[1][0], outputPath + '/folder2-nested/file2.min.js'), '');
 });
 
 test('_out_ used as default output folder', t => {
@@ -150,7 +150,7 @@ test('_out_ used as default output folder', t => {
   });
 
   sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
-  sandbox.stub(requireStub.fs, 'writeFile');
+  sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder2';
 
@@ -159,8 +159,8 @@ test('_out_ used as default output folder', t => {
   });
 
   t.deepEqual(customStubs.mkdirpStub.callCount, 2);
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[0][0], '_out_/file1.min.js'), '');
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[1][0], '_out_/folder2-nested/file2.min.js'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[0][0], '_out_/file1.min.js'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[1][0], '_out_/folder2-nested/file2.min.js'), '');
 });
 
 test('uses custom extension', t => {
@@ -169,7 +169,7 @@ test('uses custom extension', t => {
   });
 
   sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
-  sandbox.stub(requireStub.fs, 'writeFile');
+  sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder2';
 
@@ -179,8 +179,8 @@ test('uses custom extension', t => {
   });
 
   t.deepEqual(customStubs.mkdirpStub.callCount, 2);
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[0][0], '_out_/file1.test.txx'), '');
-  t.deepEqual(path.relative(requireStub.fs.writeFile.args[1][0], '_out_/folder2-nested/file2.test.txx'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[0][0], '_out_/file1.test.txx'), '');
+  t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[1][0], '_out_/folder2-nested/file2.test.txx'), '');
 });
 
 test('uses the standard uglifyjs when the es6 parameter is not present', t => {

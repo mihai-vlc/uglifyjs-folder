@@ -4,7 +4,7 @@ var uglifyJS;
 var globby = require("globby")
 var path = require('path');
 var extend = require('extend');
-var fs = require('fs');
+var fs = require('graceful-fs');
 var mkdirp = require('mkdirp');
 
 var defaultOptions = {
