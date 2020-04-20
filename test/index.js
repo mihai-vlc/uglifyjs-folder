@@ -4,7 +4,7 @@ var sinon = require('sinon');
 var path = require('path');
 
 var customStubs = {
-  mkdirpStub: function () { }
+  mkdirpStub: function () { return Promise.resolve() }
 };
 
 var requireStub = {
@@ -90,7 +90,11 @@ test.serial('write file if the output parameter is present', t => {
     code: ''
   });
 
-  sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
+  sandbox.stub(customStubs, 'mkdirpStub').returns({
+    then: sinon.stub().callsArg(0).returns({
+      catch: sinon.stub()
+    })
+  });
   sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
@@ -107,7 +111,11 @@ test.serial('write files in the specified output folder', t => {
     code: ''
   });
 
-  sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
+  sandbox.stub(customStubs, 'mkdirpStub').returns({
+    then: sinon.stub().callsArg(0).returns({
+      catch: sinon.stub()
+    })
+  });
   sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder1';
@@ -128,7 +136,11 @@ test.serial('maintain subfolder structure', t => {
     code: ''
   });
 
-  sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
+  sandbox.stub(customStubs, 'mkdirpStub').returns({
+    then: sinon.stub().callsArg(0).returns({
+      catch: sinon.stub()
+    })
+  });
   sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder2';
@@ -149,7 +161,11 @@ test.serial('_out_ used as default output folder', t => {
     code: ''
   });
 
-  sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
+  sandbox.stub(customStubs, 'mkdirpStub').returns({
+    then: sinon.stub().callsArg(0).returns({
+      catch: sinon.stub()
+    })
+  });
   sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder2';
@@ -168,7 +184,11 @@ test.serial('uses custom extension', t => {
     code: ''
   });
 
-  sandbox.stub(customStubs, 'mkdirpStub').callsArg(1);
+  sandbox.stub(customStubs, 'mkdirpStub').returns({
+    then: sinon.stub().callsArg(0).returns({
+      catch: sinon.stub()
+    })
+  });
   sandbox.stub(requireStub['graceful-fs'], 'writeFile');
 
   var dirPath = __dirname + '/fixtures/folder2';

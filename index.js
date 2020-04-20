@@ -142,9 +142,7 @@ function readFile(path) {
  * Writes the code at the specified path.
  */
 function writeFile(filePath, code) {
-
-  mkdirp(path.dirname(filePath), function () {
-
+  mkdirp(path.dirname(filePath)).then(function () {
     fs.writeFile(filePath, code, function (err) {
       if (err) {
         console.log('Error: ' + err);
@@ -152,6 +150,9 @@ function writeFile(filePath, code) {
       }
       console.log('File ' + filePath + ' written successfully !');
     });
+  })
+  .catch(function (err) {
+    console.log('Error: ' + err);
   });
 
 }

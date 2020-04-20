@@ -41,6 +41,7 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 20/Apr/2020 - Updated code to use promises for the mkdrip call.
 - 18/Apr/2020 - Updated the version for the mkdirp package #22
 - 25/Nov/2017 - Added support for sourcemaps via the uglifyjs config file   
 Exmaple configuration:
