@@ -17,7 +17,7 @@ Install the module with: `npm install uglifyjs-folder -g`
       -o --output        Specify a file/folder to write the minified code
       -e --each          Minify each file independently
       -x --extension     Minified file extension (default: .min.js)
-      -y --harmony       Uses uglify-js-harmony as a minifier
+      -y --harmony       Uses uglify-es as a minifier
       -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js
          --pseparator    Specifies the separator for the pattern input. Default: ,
          --version       Prints the current version from package.json
