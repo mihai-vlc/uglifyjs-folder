@@ -39,7 +39,7 @@ test.serial.afterEach(() => {
 test.serial('Minifier using the default options', t => {
   var result = uglifyJSFolder(workingDir);
 
-  t.snapshot(globby.sync('**'), 'Folder structure');
+  t.snapshot(globby.sync('**').sort(), 'Folder structure');
   t.snapshot(result, 'Return value');
 });
 
@@ -48,7 +48,7 @@ test.serial('Minifier with no comments', t => {
     comments: false
   });
 
-  t.snapshot(globby.sync('**'), 'Folder structure');
+  t.snapshot(globby.sync('**').sort(), 'Folder structure');
   t.snapshot(result, 'Return value');
 });
 
@@ -58,7 +58,7 @@ test.serial.cb('Minifier with the --each flag and empty output', t => {
   var opts = {
     each: true,
     callback: function () {
-      t.snapshot(globby.sync('**'), 'Folder structure');
+      t.snapshot(globby.sync('**').sort(), 'Folder structure');
       t.end();
     }
   };
@@ -72,7 +72,7 @@ test.serial.cb('Minifier with output file', t => {
   var opts = {
     output: 'all.min.js',
     callback: function () {
-      t.snapshot(globby.sync('**'), 'Folder structure');
+      t.snapshot(globby.sync('**').sort(), 'Folder structure');
       t.snapshot(fs.readFileSync('all.min.js', 'utf-8'), 'all.min.js');
       t.end();
     }
