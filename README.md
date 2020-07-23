@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/ionutvmi/uglifyjs-folder.svg?branch=master)](https://travis-ci.org/ionutvmi/uglifyjs-folder)
 
 Command to run uglifyjs on a folder and minify the result in a single file or a new folder.
+Uses the [terser](https://www.npmjs.com/package/terser) package to perform the minification.
 
 ## Getting Started
 Install the module with: `npm install uglifyjs-folder -g`
