@@ -14,7 +14,8 @@ var defaultOptions = {
   extension: '.min.js',
   patterns: ['**/*.js'],
   configFile: null,
-  callback: null
+  callback: null,
+  logLevel: 'info'
 };
 
 
@@ -24,6 +25,7 @@ module.exports = function (dirPath, options) {
   var minifier = require('terser');
   var state = {
     processCounter: 0,
+    logLevel: options.logLevel,
     callback: options.callback
   };
 
@@ -157,7 +159,9 @@ function writeFile(filePath, code, state) {
         console.error('Error: ' + err);
         return;
       }
-      console.log('File ' + filePath + ' written successfully !');
+      if (state.logLevel == 'info') {
+        console.info('File ' + filePath + ' written successfully !');
+      }
     });
   })
   .catch(function (err) {

@@ -21,7 +21,8 @@ Install the module with: `npm install uglifyjs-folder -g`
       -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js
          --pseparator    Specifies the separator for the pattern input. Default: ,
          --version       Prints the current version from package.json
-         --config-file   Specifies a json configuration file for the uglify-js/uglify-es module'
+         --config-file   Specifies a json configuration file for the terser module
+         --log-level     Specifies the log level used when processing the files. Default: info
       -h --help          Print this list and exit.
 ## Examples
     $ uglifyjs-folder test-folder
@@ -29,6 +30,7 @@ Install the module with: `npm install uglifyjs-folder -g`
     $ uglifyjs-folder test-folder -o all.min.js
     $ uglifyjs-folder test-folder --output all.min.js --pattern "**/*.js,!**/*min.js" # ignore minified files 
     $ uglifyjs-folder test-folder -eo newFolder
+    $ uglifyjs-folder test-folder -eo newFolder --log-level error
     $ uglifyjs-folder test-folder-es6 -o newFolder
     $ uglifyjs-folder test-folder -e -x .js -o test-folder # careful: overwrite all files in test-folder
     $ uglifyjs-folder test-folder --config-file "./uglify.json"
@@ -46,6 +48,7 @@ Pull requests are appreciated.
   - Removed uglify-js and uglify-es from the dependencies. 
   - Upgraded all the dependencies to the latest version.
   - Adds snapshots testing to the existing testing suite
+  - Adds the --log-level option
 - 20/Apr/2020 - Updated code to use promises for the mkdrip call.
 - 18/Apr/2020 - Updated the version for the mkdirp package #22
 - 25/Nov/2017 - Added support for sourcemaps via the uglifyjs config file   

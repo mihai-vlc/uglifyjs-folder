@@ -17,7 +17,8 @@ var cli = meow({
     '  -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js',
     '     --pseparator    Specifies the separator for the pattern input. Default: ,',
     '     --version       Prints the current version from package.json',
-    '     --config-file   Specifies a json configuration file for the uglify-js/uglify-es module',
+    '     --config-file   Specifies a json configuration file for the terser module',
+    '     --log-level     Specifies the log level used when processing the files. Default: info',
     '  -h --help          Print this list and exit.'
   ].join('\n')
 });
@@ -28,7 +29,8 @@ var result = uglifyFolder(cli.input[0], {
   each: cli.flags.each || cli.flags.e || false,
   extension: cli.flags.extension || cli.flags.x || ".min.js",
   patterns: (cli.flags.pattern || cli.flags.p || "**/*.js").split(cli.flags.pseparator || ','),
-  configFile: cli.flags.configFile || null
+  configFile: cli.flags.configFile || null,
+  logLevel: cli.flags.logLevel || 'info'
 });
 
 if (result) {
