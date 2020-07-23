@@ -17,7 +17,6 @@ Install the module with: `npm install uglifyjs-folder -g`
       -o --output        Specify a file/folder to write the minified code
       -e --each          Minify each file independently
       -x --extension     Minified file extension (default: .min.js)
-      -y --harmony       Uses uglify-js-harmony as a minifier
       -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js
          --pseparator    Specifies the separator for the pattern input. Default: ,
          --version       Prints the current version from package.json
@@ -29,7 +28,7 @@ Install the module with: `npm install uglifyjs-folder -g`
     $ uglifyjs-folder test-folder -o all.min.js
     $ uglifyjs-folder test-folder --output all.min.js --pattern "**/*.js,!**/*min.js" # ignore minified files 
     $ uglifyjs-folder test-folder -eo newFolder
-    $ uglifyjs-folder test-folder-es6 -yo newFolder
+    $ uglifyjs-folder test-folder-es6 -o newFolder
     $ uglifyjs-folder test-folder -e -x .js -o test-folder # careful: overwrite all files in test-folder
     $ uglifyjs-folder test-folder --config-file "./uglify.json"
     where uglify.json contains
@@ -41,6 +40,11 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 23/Jul/2020 
+  - Released 2.0.0 with the terser minifier. 
+  - Removed uglify-js and uglify-es from the dependencies. 
+  - Upgraded all the dependencies to the latest version.
+  - Adds snapshots testing to the existing testing suite
 - 20/Apr/2020 - Updated code to use promises for the mkdrip call.
 - 18/Apr/2020 - Updated the version for the mkdirp package #22
 - 25/Nov/2017 - Added support for sourcemaps via the uglifyjs config file   
@@ -64,5 +68,5 @@ Exmaple configuration:
 - 05/Jan/2014 - Initial release
 
 ## License
-Copyright (c) 2014 Mihai Ionut Vilcu
+Copyright (c) 2014 - 2020 Mihai Ionut Vilcu
 Licensed under the MIT license.

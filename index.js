@@ -1,6 +1,6 @@
 'use strict';
 
-var uglifyJS;
+
 var globby = require("globby")
 var path = require('path');
 var extend = require('extend');
@@ -12,20 +12,20 @@ var defaultOptions = {
   output: '',
   each: false,
   extension: '.min.js',
-  es6: false,
   patterns: ['**/*.js'],
-  configFile: null
+  configFile: null,
+  callback: null
 };
 
 
 module.exports = function (dirPath, options) {
   options = extend({}, defaultOptions, options);
 
-  if (options.es6) {
-    uglifyJS = require('uglify-es');
-  } else {
-    uglifyJS = require('uglify-js');
-  }
+  var minifier = require('terser');
+  var state = {
+    processCounter: 0,
+    callback: options.callback
+  };
 
   var uglifyConfiguration = options.configFile ? require(path.resolve(options.configFile)) : {};
 
@@ -41,17 +41,17 @@ module.exports = function (dirPath, options) {
       var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
       var originalCode = {};
       originalCode[fileName] = readFile(path.join(dirPath, fileName));
-      var minifyResult = uglifyJS.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
+      var minifyResult = minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
 
       if (minifyResult.error) {
         console.log(minifyResult.error);
         throw minifyResult.error;
       }
 
-      writeFile(newName, minifyResult.code);
+      writeFile(newName, minifyResult.code, state);
 
       if (minifyResult.map) {
-        writeFile(newName + '.map', minifyResult.map);
+        writeFile(newName + '.map', minifyResult.map, state);
       }
     });
 
@@ -76,7 +76,7 @@ module.exports = function (dirPath, options) {
       uglifyOptions.output.comments = uglifyOptions.output.comments || '/\\*{2}/';
     }
 
-    var minifyResult = uglifyJS.minify(originalCode, uglifyOptions);
+    var minifyResult = minifier.minify(originalCode, uglifyOptions);
 
     if (minifyResult.error) {
       console.log(minifyResult.error);
@@ -84,12 +84,15 @@ module.exports = function (dirPath, options) {
     }
 
     if (isEmpty(options.output)) {
+      if (state.callback) {
+        state.callback();
+      }
       return minifyResult.code;
     } else {
-      writeFile(options.output, minifyResult.code);
+      writeFile(options.output, minifyResult.code, state);
 
       if (minifyResult.map) {
-        writeFile(options.output + '.map', minifyResult.map);
+        writeFile(options.output + '.map', minifyResult.map, state);
       }
     }
 
@@ -141,9 +144,15 @@ function readFile(path) {
 /**
  * Writes the code at the specified path.
  */
-function writeFile(filePath, code) {
+function writeFile(filePath, code, state) {
+  state.processCounter++;
+
   mkdirp(path.dirname(filePath)).then(function () {
     fs.writeFile(filePath, code, function (err) {
+      state.processCounter--;
+      if (state.callback && state.processCounter === 0) {
+        state.callback();
+      }
       if (err) {
         console.log('Error: ' + err);
         return;
@@ -152,6 +161,11 @@ function writeFile(filePath, code) {
     });
   })
   .catch(function (err) {
+    state.processCounter--;
+    if (state.callback && state.processCounter === 0) {
+      state.callback();
+    }
+
     console.log('Error: ' + err);
   });
 

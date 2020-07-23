@@ -18,19 +18,16 @@ var requireStub = {
   mkdirp: function () {
     return customStubs.mkdirpStub.apply(this, arguments);
   },
-  'uglify-js': {
+  'terser': {
     minify: function () { }
   },
-  'uglify-es': {
-    minify: function () { }
-  }
 };
 
 var uglifyJsFolder = proxyquire('../index', requireStub);
 var sandbox;
 
 test.beforeEach(() => {
-  sandbox = sinon.sandbox.create();
+  sandbox = sinon.createSandbox();
 });
 
 test.afterEach(() => {
@@ -42,38 +39,38 @@ test.serial('exports a functions', t => {
 });
 
 test.serial('calls minify for all the files', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
   uglifyJsFolder(__dirname + '/fixtures/folder1');
 
-  t.deepEqual(requireStub['uglify-js'].minify.callCount, 1);
+  t.deepEqual(requireStub['terser'].minify.callCount, 1);
 });
 
 test.serial('calls minify for all nested files', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
   uglifyJsFolder(__dirname + '/fixtures/folder2');
 
-  t.deepEqual(requireStub['uglify-js'].minify.callCount, 1);
+  t.deepEqual(requireStub['terser'].minify.callCount, 1);
 });
 
 test.serial('comments are present by default', t => {
-  delete requireStub['uglify-js'].minify;
+  delete requireStub['terser'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder1');
 
   t.true(result.indexOf('/**** file1.js ****/') > -1);
   t.true(result.indexOf('/**** file2.js ****/') > -1);
 
-  requireStub['uglify-js'].minify = function () {};
+  requireStub['terser'].minify = function () {};
 });
 
 test.serial('skip comments if disabled', t => {
-  delete requireStub['uglify-js'].minify;
+  delete requireStub['terser'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
     comments: false
@@ -82,11 +79,11 @@ test.serial('skip comments if disabled', t => {
   t.true(result.indexOf('/**** file1.js ****/') == -1);
   t.true(result.indexOf('/**** file2.js ****/') == -1);
 
-  requireStub['uglify-js'].minify = function () {};
+  requireStub['terser'].minify = function () {};
 });
 
 test.serial('write file if the output parameter is present', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
@@ -107,7 +104,7 @@ test.serial('write file if the output parameter is present', t => {
 });
 
 test.serial('write files in the specified output folder', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
@@ -132,7 +129,7 @@ test.serial('write files in the specified output folder', t => {
 });
 
 test.serial('maintain subfolder structure', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
@@ -157,7 +154,7 @@ test.serial('maintain subfolder structure', t => {
 });
 
 test.serial('_out_ used as default output folder', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
@@ -180,7 +177,7 @@ test.serial('_out_ used as default output folder', t => {
 });
 
 test.serial('uses custom extension', t => {
-  sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
@@ -203,44 +200,9 @@ test.serial('uses custom extension', t => {
   t.deepEqual(path.relative(requireStub['graceful-fs'].writeFile.args[1][0], '_out_/folder2-nested/file2.test.txx'), '');
 });
 
-test.serial('uses the standard uglifyjs when the es6 parameter is not present', t => {
-  var uglifyJS = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
-    code: ''
-  });
-
-  var uglifyES6 = sandbox.stub(requireStub['uglify-es'], 'minify').returns({
-    code: ''
-  });
-
-  var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
-    output: 'subfolder/scripts.min.js'
-  });
-
-  t.deepEqual(uglifyJS.callCount, 1);
-  t.deepEqual(uglifyES6.callCount, 0);
-});
-
-test.serial('uses uglify-es when the es6 parameter is true', t => {
-  var uglifyJS = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
-    code: ''
-  });
-
-  var uglifyES6 = sandbox.stub(requireStub['uglify-es'], 'minify').returns({
-    code: ''
-  });
-
-  var result = uglifyJsFolder(__dirname + '/fixtures/folder1', {
-    output: 'subfolder/scripts.min.js',
-    es6: true
-  });
-
-  t.deepEqual(uglifyJS.callCount, 0);
-  t.deepEqual(uglifyES6.callCount, 1);
-
-});
 
 test.serial('uses the pattern parameter', t => {
-  delete requireStub['uglify-js'].minify;
+  delete requireStub['terser'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
     patterns: ['file*.js']
@@ -249,11 +211,11 @@ test.serial('uses the pattern parameter', t => {
   t.true(result.indexOf('/**** file1.js ****/') != -1);
   t.true(result.indexOf('/**** ignore1.js ****/') == -1);
 
-  requireStub['uglify-js'].minify = function () {};
+  requireStub['terser'].minify = function () {};
 });
 
 test.serial('accepts negative pattern pattern', t => {
-  delete requireStub['uglify-js'].minify;
+  delete requireStub['terser'].minify;
 
   var result = uglifyJsFolder(__dirname + '/fixtures/folder3', {
     patterns: ['**/*.js', '!ignore*.js']
@@ -262,11 +224,11 @@ test.serial('accepts negative pattern pattern', t => {
   t.true(result.indexOf('/**** file1.js ****/') != -1);
   t.true(result.indexOf('/**** ignore1.js ****/') == -1);
 
-  requireStub['uglify-js'].minify = function () {};
+  requireStub['terser'].minify = function () {};
 });
 
 test.serial('has a default minify configuration if no configuration file is specified', t => {
-  var minifyStub = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  var minifyStub = sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
@@ -278,7 +240,7 @@ test.serial('has a default minify configuration if no configuration file is spec
 
 
 test.serial('uses the specified config file', t => {
-  var minifyStub = sandbox.stub(requireStub['uglify-js'], 'minify').returns({
+  var minifyStub = sandbox.stub(requireStub['terser'], 'minify').returns({
     code: ''
   });
 
