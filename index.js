@@ -44,7 +44,7 @@ module.exports = function (dirPath, options) {
       var minifyResult = minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
 
       if (minifyResult.error) {
-        console.log(minifyResult.error);
+        console.error(minifyResult.error);
         throw minifyResult.error;
       }
 
@@ -79,7 +79,7 @@ module.exports = function (dirPath, options) {
     var minifyResult = minifier.minify(originalCode, uglifyOptions);
 
     if (minifyResult.error) {
-      console.log(minifyResult.error);
+      console.error(minifyResult.error);
       throw minifyResult.error;
     }
 
@@ -154,7 +154,7 @@ function writeFile(filePath, code, state) {
         state.callback();
       }
       if (err) {
-        console.log('Error: ' + err);
+        console.error('Error: ' + err);
         return;
       }
       console.log('File ' + filePath + ' written successfully !');
@@ -166,7 +166,7 @@ function writeFile(filePath, code, state) {
       state.callback();
     }
 
-    console.log('Error: ' + err);
+    console.error('Error: ' + err);
   });
 
 }
