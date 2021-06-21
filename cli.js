@@ -23,16 +23,20 @@ var cli = meow({
   ].join('\n')
 });
 
-var result = uglifyFolder(cli.input[0], {
-  comments: cli.flags.comments || cli.flags.c || false,
-  output: cli.flags.output || cli.flags.o,
-  each: cli.flags.each || cli.flags.e || false,
-  extension: cli.flags.extension || cli.flags.x || ".min.js",
-  patterns: (cli.flags.pattern || cli.flags.p || "**/*.js").split(cli.flags.pseparator || ','),
-  configFile: cli.flags.configFile || null,
-  logLevel: cli.flags.logLevel || 'info'
-});
+async function main() {
+  var result = await uglifyFolder(cli.input[0], {
+    comments: cli.flags.comments || cli.flags.c || false,
+    output: cli.flags.output || cli.flags.o,
+    each: cli.flags.each || cli.flags.e || false,
+    extension: cli.flags.extension || cli.flags.x || ".min.js",
+    patterns: (cli.flags.pattern || cli.flags.p || "**/*.js").split(cli.flags.pseparator || ','),
+    configFile: cli.flags.configFile || null,
+    logLevel: cli.flags.logLevel || 'info'
+  });
 
-if (result) {
-  console.log(result);
+  if (result) {
+    console.log(result);
+  }
 }
+
+main();

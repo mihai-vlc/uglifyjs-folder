@@ -19,7 +19,7 @@ var defaultOptions = {
 };
 
 
-module.exports = function (dirPath, options) {
+module.exports = async function (dirPath, options) {
   options = extend({}, defaultOptions, options);
 
   var minifier = require('terser');
@@ -38,12 +38,12 @@ module.exports = function (dirPath, options) {
 
   if (options.each) {
     // minify each file individually
-    files.forEach(function (fileName) {
+    files.forEach(async function (fileName) {
       options.output = isEmpty(options.output) ? '_out_' : options.output;
       var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
       var originalCode = {};
       originalCode[fileName] = readFile(path.join(dirPath, fileName));
-      var minifyResult = minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
+      var minifyResult = await minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
 
       if (minifyResult.error) {
         console.error(minifyResult.error);
@@ -78,7 +78,7 @@ module.exports = function (dirPath, options) {
       uglifyOptions.output.comments = uglifyOptions.output.comments || '/\\*{2}/';
     }
 
-    var minifyResult = minifier.minify(originalCode, uglifyOptions);
+    var minifyResult = await minifier.minify(originalCode, uglifyOptions);
 
     if (minifyResult.error) {
       console.error(minifyResult.error);

@@ -28,7 +28,7 @@ test.serial.beforeEach(() => {
   })
 });
 
-test.serial.afterEach(() => {
+test.serial.afterEach.always(() => {
   // clear the working directory
   del.sync([
     path.join(workingDir, '**'),
@@ -36,15 +36,15 @@ test.serial.afterEach(() => {
   ]);
 });
 
-test.serial('Minifier using the default options', t => {
-  var result = uglifyJSFolder(workingDir);
+test.serial('Minifier using the default options', async t => {
+  var result = await uglifyJSFolder(workingDir);
 
   t.snapshot(globby.sync('**').sort(), 'Folder structure');
   t.snapshot(result, 'Return value');
 });
 
-test.serial('Minifier with no comments', t => {
-  var result = uglifyJSFolder(workingDir, {
+test.serial('Minifier with no comments', async t => {
+  var result = await uglifyJSFolder(workingDir, {
     comments: false
   });
 
@@ -54,32 +54,36 @@ test.serial('Minifier with no comments', t => {
 
 
 
-test.serial.cb('Minifier with the --each flag and empty output', t => {
-  var opts = {
-    each: true,
-    callback: function () {
-      t.snapshot(globby.sync('**').sort(), 'Folder structure');
-      t.end();
-    }
-  };
-  var result = uglifyJSFolder(workingDir, opts);
+test.serial('Minifier with the --each flag and empty output', async t => {
+  return new Promise(async resolve => {
+    var opts = {
+      each: true,
+      callback: function () {
+        t.snapshot(globby.sync('**').sort(), 'Folder structure');
+        resolve();
+      }
+    };
+    var result = await uglifyJSFolder(workingDir, opts);
 
-  t.snapshot(result, 'Return value');
+    t.snapshot(result, 'Return value');
+  });
 });
 
 
-test.serial.cb('Minifier with output file', t => {
-  var opts = {
-    output: 'all.min.js',
-    callback: function () {
-      t.snapshot(globby.sync('**').sort(), 'Folder structure');
-      t.snapshot(fs.readFileSync('all.min.js', 'utf-8'), 'all.min.js');
-      t.end();
-    }
-  };
-  var result = uglifyJSFolder(workingDir, opts);
+test.serial('Minifier with output file', async t => {
+  return new Promise(async resolve => {
+    var opts = {
+      output: 'all.min.js',
+      callback: function () {
+        t.snapshot(globby.sync('**').sort(), 'Folder structure');
+        t.snapshot(fs.readFileSync('all.min.js', 'utf-8'), 'all.min.js');
+        resolve();
+      }
+    };
+    var result = await uglifyJSFolder(workingDir, opts);
 
-  t.snapshot(result, 'Return value');
+    t.snapshot(result, 'Return value');
+  });
 });
 
 

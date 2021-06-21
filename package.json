@@ -1,7 +1,7 @@
 {
   "name": "uglifyjs-folder",
   "description": "Run terser on a folder and minify the result in a single file",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "homepage": "https://github.com/ionutvmi/uglifyjs-folder",
   "author": {
     "name": "Mihai Ionut Vilcu",
@@ -50,10 +50,10 @@
     "graceful-fs": "4.2.4",
     "meow": "7.0.1",
     "mkdirp": "1.0.4",
-    "terser": "4.8.0"
+    "terser": "5.7.0"
   },
   "devDependencies": {
-    "ava": "3.10.1",
+    "ava": "3.15.0",
     "del": "^5.1.0",
     "nyc": "15.1.0",
     "proxyquire": "2.1.3",
