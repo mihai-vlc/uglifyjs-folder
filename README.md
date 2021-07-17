@@ -46,7 +46,7 @@ Pull requests are appreciated.
 - 21/Jun/2021 
   - Upgraded terser to 5.7.0
   - Modified the package API from synchronous to async/await
-  The cli interfance remained the same.
+  The cli interface remained the same.
 - 23/Jul/2020 
   - Released 2.0.0 with the terser minifier. 
   - Removed uglify-js and uglify-es from the dependencies. 
