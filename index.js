@@ -85,7 +85,7 @@ module.exports = async function (dirPath, options) {
       // Store all declarations in the map, by this we can later on
       // compare if something got redeclared
       declarations.set(fileName, {source: source, declarations: []});
-      for (let match of source.matchAll(/(?:var|let|const)\s+([^=]+)/g)) {
+      for (let match of source.matchAll(/^\s*(?:var|let|const)\s+([^=]+)/gm)) {
         // search for all declarations
         const matched = match[1].trim();
         for (let innerMatched of matched.matchAll(/[^{}[\].,\s]+/g)) {
