@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-var meow = require('meow');
-var uglifyFolder = require('./');
+const meow = require('meow');
+const uglifyFolder = require('./');
 
-var cli = meow({
+const cli = meow({
   help: [
     'Usage',
     '  uglifyjs-folder path [options]',
