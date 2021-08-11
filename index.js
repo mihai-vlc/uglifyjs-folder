@@ -1,13 +1,13 @@
 'use strict';
 
 
-var globby = require("globby")
-var path = require('path');
-var extend = require('extend');
-var fs = require('graceful-fs');
-var mkdirp = require('mkdirp');
+const globby = require("globby");
+const path = require('path');
+const extend = require('extend');
+const fs = require('graceful-fs');
+const mkdirp = require('mkdirp');
 
-var defaultOptions = {
+const defaultOptions = {
   comments: true,
   output: '',
   each: false,
@@ -20,30 +20,32 @@ var defaultOptions = {
 
 
 module.exports = async function (dirPath, options) {
+  let minifyResult;
+  let originalCode;
   options = extend({}, defaultOptions, options);
 
-  var minifier = require('terser');
-  var state = {
+  const minifier = require('terser');
+  const state = {
     processCounter: 0,
     logLevel: options.logLevel,
     callback: options.callback
   };
 
-  var uglifyConfiguration = options.configFile ? require(path.resolve(options.configFile)) : {};
+  const uglifyConfiguration = options.configFile ? require(path.resolve(options.configFile)) : {};
 
   // grab and minify all the js files
-  var files = globby.sync(options.patterns, {
+  const files = globby.sync(options.patterns, {
     cwd: dirPath
   });
 
   if (options.each) {
     // minify each file individually
-    files.forEach(async function (fileName) {
+    for (const fileName of files) {
       options.output = isEmpty(options.output) ? '_out_' : options.output;
-      var newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
-      var originalCode = {};
+      const newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
+      originalCode = {};
       originalCode[fileName] = readFile(path.join(dirPath, fileName));
-      var minifyResult = await minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
+      minifyResult = await minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
 
       if (minifyResult.error) {
         console.error(minifyResult.error);
@@ -55,15 +57,15 @@ module.exports = async function (dirPath, options) {
       if (minifyResult.map) {
         writeFile(newName + '.map', minifyResult.map, state);
       }
-    });
+    }
 
   } else {
 
     // concatenate all the files into one
-    var originalCode = {};
+    originalCode = {};
 
     files.forEach(function (fileName) {
-      var source = readFile(path.join(dirPath, fileName));
+      let source = readFile(path.join(dirPath, fileName));
 
       if (options.comments) {
         source = '/**** ' + fileName + ' ****/\n' + source;
@@ -71,14 +73,14 @@ module.exports = async function (dirPath, options) {
       originalCode[fileName] = source;
     });
 
-    var uglifyOptions = getUglifyOptions(options.output, uglifyConfiguration);
+    const uglifyOptions = getUglifyOptions(options.output, uglifyConfiguration);
 
     if (options.comments) {
       uglifyOptions.output = uglifyOptions.output || {};
       uglifyOptions.output.comments = uglifyOptions.output.comments || '/\\*{2}/';
     }
 
-    var minifyResult = await minifier.minify(originalCode, uglifyOptions);
+    minifyResult = await minifier.minify(originalCode, uglifyOptions);
 
     if (minifyResult.error) {
       console.error(minifyResult.error);
@@ -110,7 +112,7 @@ module.exports = async function (dirPath, options) {
  */
 function getUglifyOptions (fileName, uglifyConfiguration) {
   fileName = path.basename(fileName);
-  var uglifyOptions = JSON.parse(JSON.stringify(uglifyConfiguration));
+  const uglifyOptions = JSON.parse(JSON.stringify(uglifyConfiguration));
 
   if (uglifyOptions.sourceMap) {
     if (uglifyOptions.sourceMap.filename) {
@@ -128,10 +130,7 @@ function getUglifyOptions (fileName, uglifyConfiguration) {
  * Checks if the provided parameter is not an empty string.
  */
 function isEmpty(str) {
-  if (typeof str != 'string' || str.trim() == '') {
-    return true;
-  }
-  return false;
+  return typeof str != 'string' || str.trim() === '';
 }
 
 function readFile(path) {
@@ -159,7 +158,7 @@ function writeFile(filePath, code, state) {
         console.error('Error: ' + err);
         return;
       }
-      if (state.logLevel == 'info') {
+      if (state.logLevel === 'info') {
         console.info('File ' + filePath + ' written successfully !');
       }
     });
