@@ -26,7 +26,7 @@ const cli = meow({
 });
 
 async function main() {
-  var result = await uglifyFolder(cli.input[0], {
+  const result = await uglifyFolder(cli.input[0], {
     comments: cli.flags.comments || cli.flags.c || false,
     output: cli.flags.output || cli.flags.o,
     each: cli.flags.each || cli.flags.e || false,
