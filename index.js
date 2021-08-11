@@ -42,10 +42,14 @@ module.exports = async function (dirPath, options) {
     // minify each file individually
     for (const fileName of files) {
       options.output = isEmpty(options.output) ? '_out_' : options.output;
-      const newName = path.join(options.output, path.dirname(fileName), path.basename(fileName, path.extname(fileName))) + options.extension;
+      const newName = path.join(
+        options.output,
+        path.dirname(fileName),
+        path.basename(fileName, path.extname(fileName))) + options.extension;
       originalCode = {};
       originalCode[fileName] = readFile(path.join(dirPath, fileName));
-      minifyResult = await minifier.minify(originalCode, getUglifyOptions(newName, uglifyConfiguration));
+      minifyResult = await minifier.minify(
+        originalCode, getUglifyOptions(newName, uglifyConfiguration));
 
       if (minifyResult.error) {
         console.error(minifyResult.error);
@@ -110,16 +114,18 @@ module.exports = async function (dirPath, options) {
  * @param  {Object} uglifyConfiguration
  * @return {Object}
  */
-function getUglifyOptions (fileName, uglifyConfiguration) {
+function getUglifyOptions(fileName, uglifyConfiguration) {
   fileName = path.basename(fileName);
   const uglifyOptions = JSON.parse(JSON.stringify(uglifyConfiguration));
 
   if (uglifyOptions.sourceMap) {
     if (uglifyOptions.sourceMap.filename) {
-      uglifyOptions.sourceMap.filename = uglifyOptions.sourceMap.filename.replace('{file}', fileName);
+      uglifyOptions.sourceMap.filename =
+        uglifyOptions.sourceMap.filename.replace('{file}', fileName);
     }
     if (uglifyOptions.sourceMap.url) {
-      uglifyOptions.sourceMap.url = uglifyOptions.sourceMap.url.replace('{file}', fileName);
+      uglifyOptions.sourceMap.url =
+        uglifyOptions.sourceMap.url.replace('{file}', fileName);
     }
   }
 
@@ -163,14 +169,14 @@ function writeFile(filePath, code, state) {
       }
     });
   })
-  .catch(function (err) {
-    state.processCounter--;
-    if (state.callback && state.processCounter === 0) {
-      state.callback();
-    }
+    .catch(function (err) {
+      state.processCounter--;
+      if (state.callback && state.processCounter === 0) {
+        state.callback();
+      }
 
-    console.error('Error: ' + err);
-  });
+      console.error('Error: ' + err);
+    });
 
 }
 
