@@ -15,6 +15,8 @@ var cli = meow({
     '  -e --each          Minify each file independently',
     '  -x --extension     Minified file extension (default: .min.js)',
     '  -p --pattern       Specifies a comma separated glob patterns for the file selections. Default: **/*.js',
+    '  -d --redeclare     Makes every declaration unique, useful for single output to avoid redeclaration errors.',
+    '                     Don\'t use if it works without.',
     '     --pseparator    Specifies the separator for the pattern input. Default: ,',
     '     --version       Prints the current version from package.json',
     '     --config-file   Specifies a json configuration file for the terser module',
@@ -31,7 +33,8 @@ async function main() {
     extension: cli.flags.extension || cli.flags.x || ".min.js",
     patterns: (cli.flags.pattern || cli.flags.p || "**/*.js").split(cli.flags.pseparator || ','),
     configFile: cli.flags.configFile || null,
-    logLevel: cli.flags.logLevel || 'info'
+    logLevel: cli.flags.logLevel || 'info',
+    redeclare: cli.flags.redeclare || cli.flags.d || false
   });
 
   if (result) {

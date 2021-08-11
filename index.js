@@ -6,6 +6,9 @@ const path = require('path');
 const extend = require('extend');
 const fs = require('graceful-fs');
 const mkdirp = require('mkdirp');
+const {match} = require("sinon");
+const del = require("del");
+const minifier = require("terser");
 
 const defaultOptions = {
   comments: true,
@@ -68,6 +71,9 @@ module.exports = async function (dirPath, options) {
     // concatenate all the files into one
     originalCode = {};
 
+    // Map to store all declarations
+    let declarations = new Map();
+
     files.forEach(function (fileName) {
       let source = readFile(path.join(dirPath, fileName));
 
@@ -75,6 +81,18 @@ module.exports = async function (dirPath, options) {
         source = '/**** ' + fileName + ' ****/\n' + source;
       }
       originalCode[fileName] = source;
+
+      // Store all declarations in the map, by this we can later on
+      // compare if something got redeclared
+      declarations.set(fileName, {source: source, declarations: []});
+      for (let match of source.matchAll(/(?:var|let|const)\s+([^=]+)/g)) {
+        // search for all declarations
+        const matched = match[1].trim();
+        for (let innerMatched of matched.matchAll(/[^{}[\].,\s]+/g)) {
+          // this allows destructuring
+          declarations.get(fileName).declarations.push(innerMatched[0]);
+        }
+      }
     });
 
     const uglifyOptions = getUglifyOptions(options.output, uglifyConfiguration);
@@ -84,7 +102,48 @@ module.exports = async function (dirPath, options) {
       uglifyOptions.output.comments = uglifyOptions.output.comments || '/\\*{2}/';
     }
 
-    minifyResult = await minifier.minify(originalCode, uglifyOptions);
+    if (options.redeclare) {
+      // The keys (fileNames) of every source
+      const declarationFiles = Array.from(declarations.keys());
+      for (let these = 0; these < declarationFiles.length; these++) {
+        // iterate over every value of the map
+        const theseValues = declarations.get(declarationFiles[these]).declarations;
+        for (let those = these + 1; those < declarationFiles.length; those++) {
+          // iterate over the rest of the map
+          const thoseFileName = declarationFiles[those];
+          const thoseDeclarations = declarations.get(thoseFileName);
+          const thoseValues = thoseDeclarations.declarations;
+          let thoseSource = thoseDeclarations.source;
+
+          for (let declared of theseValues) {
+            // iterate over every declared name of one file
+            for (let i = 0; i < thoseValues.length; i++) {
+              // iterate over every declared name of the other files
+              if (declared === thoseValues[i]) {
+                // check if one declaration name is equal to one in another file
+
+                // append to the declaration name a "_"
+                const newName = declared + "_";
+                thoseValues[i] = newName;
+                const findRegex = new RegExp(` ${declared}([^\d\w_$])`, "g");
+                thoseSource = thoseSource.replace(findRegex, ` ${newName}$1`);
+                originalCode[thoseFileName] = thoseSource;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    try {
+      minifyResult = await minifier.minify(originalCode, uglifyOptions);
+    }
+    catch (e) {
+      if (e.message.endsWith("is redeclared")) {
+        console.log("Try to use the --redeclare option");
+      }
+      throw e;
+    }
 
     if (minifyResult.error) {
       console.error(minifyResult.error);
