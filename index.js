@@ -125,9 +125,10 @@ module.exports = async function (dirPath, options) {
                 // append to the declaration name a "_"
                 const newName = declared + "_";
                 thoseValues[i] = newName;
-                const findRegex = new RegExp(` ${declared}([^\d\w_$])`, "g");
-                thoseSource = thoseSource.replace(findRegex, ` ${newName}$1`);
+                const findRegex = new RegExp(`([^\d\w_$])${declared}([^\d\w_$])`, "g");
+                thoseSource = thoseSource.replace(findRegex, `$1${newName}$2`);
                 originalCode[thoseFileName] = thoseSource;
+                thoseDeclarations.source = thoseSource;
               }
             }
           }
