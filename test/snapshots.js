@@ -69,6 +69,22 @@ test.serial('Minifier with the --each flag and empty output', async t => {
   });
 });
 
+test.serial('Minifier with the --each flag, config file and source maps', async t => {
+  return new Promise(async resolve => {
+    var opts = {
+      each: true,
+      configFile: path.join(dataDir, 'config1.json'),
+      callback: function () {
+        t.snapshot(globby.sync('**').sort(), 'Folder structure');
+        resolve();
+      }
+    };
+    var result = await uglifyJSFolder(workingDir, opts);
+
+    t.snapshot(result, 'Return value');
+  });
+});
+
 
 test.serial('Minifier with output file', async t => {
   return new Promise(async resolve => {
