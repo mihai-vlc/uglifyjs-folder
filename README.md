@@ -44,7 +44,7 @@ Pull requests are appreciated.
 
 ## Release History
 - 02/Apr/2022 
-  - Upgraded terser to 5.12.0
+  - Upgraded terser to 5.12.1
   - Upgraded the development dependencies to the latest version
   - Removed the testing on node v10 from travis ci
   - Fixes #32
