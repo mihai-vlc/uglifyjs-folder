@@ -43,6 +43,9 @@ Install the module with: `npm install uglifyjs-folder -g`
 Pull requests are appreciated.
 
 ## Release History
+- 29/Dec/2022 
+  - Upgraded terser to 5.16.1
+
 - 31/Oct/2022 
   - Fixed the line ending during npm publish. Fixes #34
 
