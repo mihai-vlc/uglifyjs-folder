@@ -1,6 +1,7 @@
+
 # uglifyjs-folder
 
-[![Build Status](https://travis-ci.com/ionutvmi/uglifyjs-folder.svg?branch=master)](https://travis-ci.com/github/ionutvmi/uglifyjs-folder)
+![tests](https://github.com/mihai-vlc/uglifyjs-folder/actions/workflows/test.yml/badge.svg)
 
 Command to run uglifyjs on a folder and minify the result in a single file or a new folder.
 Uses the [terser](https://www.npmjs.com/package/terser) package to perform the minification.
@@ -94,3 +95,4 @@ Exmaple configuration:
 ## License
 Copyright (c) 2014 - 2020 Mihai Ionut Vilcu
 Licensed under the MIT license.
+
