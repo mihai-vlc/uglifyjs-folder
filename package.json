@@ -2,24 +2,19 @@
   "name": "uglifyjs-folder",
   "description": "Run terser on a folder and minify the result in a single file",
   "version": "3.2.0",
-  "homepage": "https://github.com/ionutvmi/uglifyjs-folder",
+  "homepage": "https://github.com/mihai-vlc/uglifyjs-folder",
   "author": {
     "name": "Mihai Ionut Vilcu",
     "email": "ionutvmi@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ionutvmi/uglifyjs-folder.git"
+    "url": "git://github.com/mihai-vlc/uglifyjs-folder.git"
   },
   "bugs": {
-    "url": "https://github.com/ionutvmi/uglifyjs-folder/issues"
+    "url": "https://github.com/mihai-vlc/uglifyjs-folder/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/ionutvmi/uglifyjs-folder/blob/master/LICENSE-MIT"
-    }
-  ],
+  "license": "MIT",
   "engines": {
     "node": ">=14"
   },
