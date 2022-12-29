@@ -3,4 +3,5 @@ tmp
 tmp2
 coverage
 .vscode
+.github
 .nyc_output
